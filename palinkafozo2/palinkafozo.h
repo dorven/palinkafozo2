@@ -14,13 +14,22 @@ class Palinkafozo : public QMainWindow
 
 public:
     double rpm;
+    int enabled;
+    double move_time;
+    double sleep_time;
+    double counter;
+    int direction;
+    int emergency;
+    int left_stuck;
+    int right_stuck;
+    int both_stucked;
     double getrpm();
+    void solveproblem();
     explicit Palinkafozo(QWidget *parent = 0);
     ~Palinkafozo();
 
 public slots:
     void ShowData();
-    //double getrpm();
 
 private slots:
     void on_pushButton_2_clicked();
@@ -29,6 +38,8 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+
+    void on_pushButton_clicked();
 
 public:
     Ui::Palinkafozo *ui;
