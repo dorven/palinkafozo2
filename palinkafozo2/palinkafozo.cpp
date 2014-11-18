@@ -35,6 +35,7 @@ Palinkafozo::Palinkafozo(QWidget *parent) :
 void Palinkafozo::ShowData(){
     rpm=getrpm();
     ui->lcdNumber->display(int(rpm));
+    ui->lcdNumber_2->display(int(counter));
     if(enabled==1){
         counter+=0.5;
         if(counter<=move_time) {clear_pin(LP_PIN[2]); set_pin(LP_PIN[1]); }
@@ -87,7 +88,7 @@ double Palinkafozo::getrpm(){
            prev=1;
        }
     }
-    return rev*2.5;
+    return rev*2.5*60;
 }
 
 
@@ -103,18 +104,27 @@ void Palinkafozo::on_pushButton_2_clicked()
 {
     clear_pin(LP_PIN[2]);
     set_pin(LP_PIN[1]);
+    enabled=0;
+    both_stucked=0;
+    left_stuck=0;
 }
 
 void Palinkafozo::on_pushButton_3_clicked()
 {
     clear_pin(LP_PIN[1]);
     clear_pin(LP_PIN[2]);
+    enabled=0;
+    both_stucked=0;
+    left_stuck=0;
 }
 
 void Palinkafozo::on_pushButton_4_clicked()
 {
     clear_pin(LP_PIN[1]);
     set_pin(LP_PIN[2]);
+    both_stucked=0;
+    left_stuck=0;
+    enabled=0;
 }
 
 void Palinkafozo::on_pushButton_clicked()
@@ -125,4 +135,6 @@ void Palinkafozo::on_pushButton_clicked()
     sleep_time=text2.toDouble();
 
     enabled=1;
+    both_stucked=0;
+    left_stuck=0;
 }
