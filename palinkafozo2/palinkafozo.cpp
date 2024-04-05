@@ -2,9 +2,10 @@
 #include <QTimer>
 #include <QSound>
 
+#include "parapin.h"
+
 #include "palinkafozo.h"
 #include "ui_palinkafozo.h"
-#include "parapin.h"
 
 Palinkafozo::Palinkafozo(QWidget *parent) :
     QMainWindow(parent),
@@ -24,7 +25,15 @@ Palinkafozo::Palinkafozo(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(show_data()));
     timer->start(500);
     show_data();
+}
 
+void Palinkafozo::init_port(){
+    if (pin_init_user(LPT1) < 0) exit(0);
+    pin_output_mode(LP_PIN[1]);
+    pin_output_mode(LP_PIN[2]);
+    pin_input_mode(LP_PIN[13]);
+    clear_pin(LP_PIN[1]);
+    clear_pin(LP_PIN[2]);
 }
 
 void Palinkafozo::show_data(){
@@ -43,9 +52,7 @@ void Palinkafozo::show_data(){
     if((left_stuck==1 || right_stuck==1)&& both_stuck==0) try_to_unstuck();
     if(both_stuck==1){
         QSound::play("WarningSiren.wav");
-
     }
-
 }
 
 void Palinkafozo::try_to_unstuck(){
@@ -63,7 +70,6 @@ void Palinkafozo::try_to_unstuck(){
         left_stuck=0;
     }
     elapsedSeconds+=0.5;
-
 }
 
 double Palinkafozo::get_rpm(){

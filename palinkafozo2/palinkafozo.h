@@ -20,6 +20,7 @@ public:
     int left_stuck;
     int right_stuck;
     int both_stuck;
+    void init_port();
     double get_rpm();
     void try_to_unstuck();
     explicit Palinkafozo(QWidget *parent = 0);
