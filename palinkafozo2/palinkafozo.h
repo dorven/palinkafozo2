@@ -2,7 +2,6 @@
 #define PALINKAFOZO_H
 
 #include <QMainWindow>
-#include <QThread>
 
 namespace Ui {
 class Palinkafozo;
@@ -15,21 +14,19 @@ class Palinkafozo : public QMainWindow
 public:
     double rpm;
     int enabled;
-    double move_time;
-    double sleep_time;
-    double counter;
-    int direction;
-    int emergency;
+    double mix_time;
+    double wait_time;
+    double elapsedSeconds;
     int left_stuck;
     int right_stuck;
-    int both_stucked;
-    double getrpm();
-    void solveproblem();
+    int both_stuck;
+    double get_rpm();
+    void try_to_unstuck();
     explicit Palinkafozo(QWidget *parent = 0);
     ~Palinkafozo();
 
 public slots:
-    void ShowData();
+    void show_data();
 
 private slots:
     void on_pushButton_2_clicked();
@@ -44,16 +41,5 @@ private slots:
 public:
     Ui::Palinkafozo *ui;
 };
-
-
-/*class Sleeper : public QThread
-{
-public:
-    Sleeper(){}
-    static void usleep(unsigned long usecs){QThread::usleep(usecs);}
-    static void msleep(unsigned long msecs){QThread::msleep(msecs);}
-    static void sleep(unsigned long secs){QThread::sleep(secs);}
-};*/
-
 
 #endif // PALINKAFOZO_H
