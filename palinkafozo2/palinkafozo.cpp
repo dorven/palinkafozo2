@@ -6,7 +6,7 @@
 #include <QElapsedTimer>
 #include <QTime>
 #include <iostream>
- #include <QApplication>
+#include <QApplication>
 #include <QSound>
 
 Palinkafozo::Palinkafozo(QWidget *parent) :
@@ -130,7 +130,7 @@ void Palinkafozo::on_pushButton_4_clicked()
 void Palinkafozo::on_pushButton_clicked()
 {
     QString text=ui->lineEdit->text();
-    QString text2=ui->lineEdit->text();
+    QString text2=ui->lineEdit_2->text();
     move_time=text.toDouble();
     sleep_time=text2.toDouble();
 
