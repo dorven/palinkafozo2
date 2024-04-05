@@ -13,6 +13,7 @@ class Palinkafozo : public QMainWindow
 
 public:
     const int REFRESH_TIME = 500;
+    const double REVERSE_SPIN_TIME = 1.5;
     const double MIN_RPM = 200;
 
     double rpm;
@@ -21,9 +22,9 @@ public:
     double wait_time;
     double elapsedSeconds;
     bool left_stuck;
-    bool right_stuck;
     bool both_stuck;
     void init_port();
+    void reset_stuck_variables();
     double get_rpm();
     void try_to_unstuck();
     explicit Palinkafozo(QWidget *parent = 0);

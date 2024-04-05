@@ -16,9 +16,7 @@ Palinkafozo::Palinkafozo(QWidget *parent) :
     mix_time=0;
     wait_time=0;
     elapsedSeconds=0;
-    left_stuck=false;
-    right_stuck=false;
-    both_stuck=false;
+    reset_stuck_variables();
 
     ui->setupUi(this);
     QTimer *timer = new QTimer(this);
@@ -36,6 +34,11 @@ void Palinkafozo::init_port(){
     clear_pin(LP_PIN[2]);
 }
 
+void Palinkafozo::reset_stuck_variables(){
+    left_stuck=false;
+    both_stuck=false;
+}
+
 void Palinkafozo::show_data(){
     rpm=get_rpm();
     ui->lcdNumber->display(int(rpm));
@@ -49,7 +52,7 @@ void Palinkafozo::show_data(){
             enabled=false; elapsedSeconds=0; left_stuck=true;
         }
     }
-    if((left_stuck || right_stuck) && !both_stuck) try_to_unstuck();
+    if(left_stuck && !both_stuck) try_to_unstuck();
     if(both_stuck){
         QSound::play("WarningSiren.wav");
     }
@@ -58,12 +61,12 @@ void Palinkafozo::show_data(){
 void Palinkafozo::try_to_unstuck(){
     clear_pin(LP_PIN[1]);
     set_pin(LP_PIN[2]);
-    if(elapsedSeconds>=1.5 && rpm==0){
+    if(elapsedSeconds>=REVERSE_SPIN_TIME && rpm<MIN_RPM){
         clear_pin(LP_PIN[2]);
         clear_pin(LP_PIN[1]);
         both_stuck=true;
     }
-    if(elapsedSeconds>=1.5 && rpm>0){
+    if(elapsedSeconds>=REVERSE_SPIN_TIME && rpm>=MIN_RPM){
         elapsedSeconds=0;
         clear_pin(LP_PIN[2]);
         enabled=true;
@@ -102,8 +105,7 @@ void Palinkafozo::on_pushButton_2_clicked()
     clear_pin(LP_PIN[2]);
     set_pin(LP_PIN[1]);
     enabled=false;
-    both_stuck=false;
-    left_stuck=false;
+    reset_stuck_variables();
 }
 
 void Palinkafozo::on_pushButton_3_clicked()
@@ -111,17 +113,15 @@ void Palinkafozo::on_pushButton_3_clicked()
     clear_pin(LP_PIN[1]);
     clear_pin(LP_PIN[2]);
     enabled=false;
-    both_stuck=false;
-    left_stuck=false;
+    reset_stuck_variables();
 }
 
 void Palinkafozo::on_pushButton_4_clicked()
 {
     clear_pin(LP_PIN[1]);
     set_pin(LP_PIN[2]);
-    both_stuck=false;
-    left_stuck=false;
     enabled=false;
+    reset_stuck_variables();
 }
 
 void Palinkafozo::on_pushButton_clicked()
@@ -132,8 +132,7 @@ void Palinkafozo::on_pushButton_clicked()
     wait_time=text2.toDouble();
 
     enabled=true;
-    both_stuck=false;
-    left_stuck=false;
+    reset_stuck_variables();
 }
 
 Palinkafozo::~Palinkafozo()
