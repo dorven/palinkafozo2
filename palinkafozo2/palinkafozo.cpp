@@ -12,18 +12,18 @@ Palinkafozo::Palinkafozo(QWidget *parent) :
     ui(new Ui::Palinkafozo)
 {
     rpm=0;
-    enabled=0;
+    enabled=false;
     mix_time=0;
     wait_time=0;
     elapsedSeconds=0;
-    left_stuck=0;
-    right_stuck=0;
-    both_stuck=0;
+    left_stuck=false;
+    right_stuck=false;
+    both_stuck=false;
 
     ui->setupUi(this);
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(show_data()));
-    timer->start(500);
+    timer->start(REFRESH_TIME);
     show_data();
 }
 
@@ -40,17 +40,17 @@ void Palinkafozo::show_data(){
     rpm=get_rpm();
     ui->lcdNumber->display(int(rpm));
     ui->lcdNumber_2->display(int(elapsedSeconds));
-    if(enabled==1){
+    if(enabled){
         elapsedSeconds+=0.5;
         if(elapsedSeconds<=mix_time) {clear_pin(LP_PIN[2]); set_pin(LP_PIN[1]);}
         if(elapsedSeconds>mix_time) clear_pin(LP_PIN[1]);
         if(elapsedSeconds>=(mix_time+wait_time)) elapsedSeconds=0;
-        if(elapsedSeconds<=mix_time && elapsedSeconds>=1 && rpm==0 && enabled==1){
-            enabled=0; elapsedSeconds=0; left_stuck=1;
+        if(elapsedSeconds<=mix_time && elapsedSeconds>=1 && rpm<MIN_RPM && enabled){
+            enabled=false; elapsedSeconds=0; left_stuck=true;
         }
     }
-    if((left_stuck==1 || right_stuck==1)&& both_stuck==0) try_to_unstuck();
-    if(both_stuck==1){
+    if((left_stuck || right_stuck) && !both_stuck) try_to_unstuck();
+    if(both_stuck){
         QSound::play("WarningSiren.wav");
     }
 }
@@ -61,13 +61,13 @@ void Palinkafozo::try_to_unstuck(){
     if(elapsedSeconds>=1.5 && rpm==0){
         clear_pin(LP_PIN[2]);
         clear_pin(LP_PIN[1]);
-        both_stuck=1;
+        both_stuck=true;
     }
     if(elapsedSeconds>=1.5 && rpm>0){
         elapsedSeconds=0;
         clear_pin(LP_PIN[2]);
-        enabled=1;
-        left_stuck=0;
+        enabled=true;
+        left_stuck=false;
     }
     elapsedSeconds+=0.5;
 }
@@ -101,27 +101,27 @@ void Palinkafozo::on_pushButton_2_clicked()
 {
     clear_pin(LP_PIN[2]);
     set_pin(LP_PIN[1]);
-    enabled=0;
-    both_stuck=0;
-    left_stuck=0;
+    enabled=false;
+    both_stuck=false;
+    left_stuck=false;
 }
 
 void Palinkafozo::on_pushButton_3_clicked()
 {
     clear_pin(LP_PIN[1]);
     clear_pin(LP_PIN[2]);
-    enabled=0;
-    both_stuck=0;
-    left_stuck=0;
+    enabled=false;
+    both_stuck=false;
+    left_stuck=false;
 }
 
 void Palinkafozo::on_pushButton_4_clicked()
 {
     clear_pin(LP_PIN[1]);
     set_pin(LP_PIN[2]);
-    both_stuck=0;
-    left_stuck=0;
-    enabled=0;
+    both_stuck=false;
+    left_stuck=false;
+    enabled=false;
 }
 
 void Palinkafozo::on_pushButton_clicked()
@@ -131,9 +131,9 @@ void Palinkafozo::on_pushButton_clicked()
     mix_time=text.toDouble();
     wait_time=text2.toDouble();
 
-    enabled=1;
-    both_stuck=0;
-    left_stuck=0;
+    enabled=true;
+    both_stuck=false;
+    left_stuck=false;
 }
 
 Palinkafozo::~Palinkafozo()
