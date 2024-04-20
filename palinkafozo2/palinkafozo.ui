@@ -19,7 +19,7 @@
    <string>Palinkafozo</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QLCDNumber" name="lcdNumber">
+   <widget class="QLCDNumber" name="rpmDisplay">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -29,7 +29,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="rpmLabel">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -47,7 +47,7 @@
      <string>RPM:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="mixTimeLabel">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -65,7 +65,7 @@
      <string>Keverés</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="mixTimeInput">
     <property name="geometry">
      <rect>
       <x>132</x>
@@ -75,7 +75,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_2">
+   <widget class="QLineEdit" name="waitTimeInput">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -85,7 +85,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLabel" name="label_3">
+   <widget class="QLabel" name="waitTimeLabel">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -103,7 +103,7 @@
      <string>Szünet</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="startButton">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -116,7 +116,7 @@
      <string>START</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="forwardButton">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -131,10 +131,10 @@
      </font>
     </property>
     <property name="text">
-     <string>Balra</string>
+     <string>Előre</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="stopButton">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -152,7 +152,7 @@
      <string>Stop</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_4">
+   <widget class="QPushButton" name="backwardsButton">
     <property name="geometry">
      <rect>
       <x>260</x>
@@ -167,10 +167,10 @@
      </font>
     </property>
     <property name="text">
-     <string>Jobbra</string>
+     <string>Hátra</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_4">
+   <widget class="QLabel" name="timeLabel">
     <property name="geometry">
      <rect>
       <x>210</x>
@@ -188,7 +188,7 @@
      <string>Idő:</string>
     </property>
    </widget>
-   <widget class="QLCDNumber" name="lcdNumber_2">
+   <widget class="QLCDNumber" name="timeDisplay">
     <property name="geometry">
      <rect>
       <x>270</x>
@@ -243,7 +243,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_5">
+   <widget class="QLabel" name="safetyRevCheckLabel">
     <property name="geometry">
      <rect>
       <x>10</x>

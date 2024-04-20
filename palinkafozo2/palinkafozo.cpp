@@ -40,8 +40,8 @@ void Palinkafozo::reset_stuck_variables(){
 
 void Palinkafozo::show_data(){
     rpm=get_rpm();
-    ui->lcdNumber->display(int(rpm));
-    ui->lcdNumber_2->display(int(elapsedSeconds));
+    ui->rpmDisplay->display(int(rpm));
+    ui->timeDisplay->display(int(elapsedSeconds));
     if(is_enabled){
         elapsedSeconds+=0.5;
         if(elapsedSeconds<=mix_time) {clear_pin(BACKWARD_PIN); set_pin(FORWARD_PIN);}
@@ -98,7 +98,7 @@ double Palinkafozo::get_rpm(){
     return rev*2.5*60;
 }
 
-void Palinkafozo::on_pushButton_2_clicked()
+void Palinkafozo::on_forwardButton_clicked()
 {
     clear_pin(BACKWARD_PIN);
     set_pin(FORWARD_PIN);
@@ -106,7 +106,7 @@ void Palinkafozo::on_pushButton_2_clicked()
     reset_stuck_variables();
 }
 
-void Palinkafozo::on_pushButton_3_clicked()
+void Palinkafozo::on_stopButton_clicked()
 {
     clear_pin(FORWARD_PIN);
     clear_pin(BACKWARD_PIN);
@@ -114,7 +114,7 @@ void Palinkafozo::on_pushButton_3_clicked()
     reset_stuck_variables();
 }
 
-void Palinkafozo::on_pushButton_4_clicked()
+void Palinkafozo::on_backwardsButton_clicked()
 {
     clear_pin(FORWARD_PIN);
     set_pin(BACKWARD_PIN);
@@ -122,12 +122,12 @@ void Palinkafozo::on_pushButton_4_clicked()
     reset_stuck_variables();
 }
 
-void Palinkafozo::on_pushButton_clicked()
+void Palinkafozo::on_startButton_clicked()
 {
-    QString text=ui->lineEdit->text();
-    QString text2=ui->lineEdit_2->text();
-    mix_time=text.toDouble();
-    wait_time=text2.toDouble();
+    QString text=ui->mixTimeInput->text();
+    QString text2=ui->waitTimeInput->text();
+    mix_time=ui->mixTimeInput->text().toDouble(); //text.toDouble();
+    wait_time=ui->waitTimeInput->text().toDouble(); //text2.toDouble();
     is_safety_revolution_check_on = ui->safetyRevolutionCheck->isChecked();
 
     is_enabled=true;
