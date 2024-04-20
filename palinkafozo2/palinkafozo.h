@@ -23,6 +23,7 @@ public:
     double elapsedSeconds;
     bool left_stuck;
     bool both_stuck;
+    bool is_safety_revolution_check_on;
     void init_port();
     void reset_stuck_variables();
     double get_rpm();

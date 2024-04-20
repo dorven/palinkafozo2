@@ -16,6 +16,7 @@ Palinkafozo::Palinkafozo(QWidget *parent) :
     mix_time=0;
     wait_time=0;
     elapsedSeconds=0;
+    is_safety_revolution_check_on=true;
     reset_stuck_variables();
 
     ui->setupUi(this);
@@ -48,7 +49,7 @@ void Palinkafozo::show_data(){
         if(elapsedSeconds<=mix_time) {clear_pin(LP_PIN[2]); set_pin(LP_PIN[1]);}
         if(elapsedSeconds>mix_time) clear_pin(LP_PIN[1]);
         if(elapsedSeconds>=(mix_time+wait_time)) elapsedSeconds=0;
-        if(elapsedSeconds<=mix_time && elapsedSeconds>=1 && rpm<MIN_RPM && enabled){
+        if(elapsedSeconds<=mix_time && elapsedSeconds>=1 && rpm<MIN_RPM && enabled && is_safety_revolution_check_on){
             enabled=false; elapsedSeconds=0; left_stuck=true;
         }
     }
@@ -130,6 +131,7 @@ void Palinkafozo::on_pushButton_clicked()
     QString text2=ui->lineEdit_2->text();
     mix_time=text.toDouble();
     wait_time=text2.toDouble();
+    is_safety_revolution_check_on = ui->safetyRevolutionCheck->isChecked();
 
     enabled=true;
     reset_stuck_variables();
