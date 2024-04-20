@@ -2,8 +2,6 @@
 #include <QTimer>
 #include <QSound>
 
-#include "parapin.h"
-
 #include "palinkafozo.h"
 #include "ui_palinkafozo.h"
 
@@ -12,7 +10,7 @@ Palinkafozo::Palinkafozo(QWidget *parent) :
     ui(new Ui::Palinkafozo)
 {
     rpm=0;
-    enabled=false;
+    is_enabled=false;
     mix_time=0;
     wait_time=0;
     elapsedSeconds=0;
@@ -28,50 +26,49 @@ Palinkafozo::Palinkafozo(QWidget *parent) :
 
 void Palinkafozo::init_port(){
     if (pin_init_user(LPT1) < 0) exit(0);
-    pin_output_mode(LP_PIN[1]);
-    pin_output_mode(LP_PIN[2]);
-    pin_input_mode(LP_PIN[13]);
-    clear_pin(LP_PIN[1]);
-    clear_pin(LP_PIN[2]);
+    pin_output_mode(FORWARD_PIN);
+    pin_output_mode(BACKWARD_PIN);
+    pin_input_mode(REV_COUNTER_SENSOR);
+    clear_pin(FORWARD_PIN);
+    clear_pin(BACKWARD_PIN);
 }
 
 void Palinkafozo::reset_stuck_variables(){
-    left_stuck=false;
-    both_stuck=false;
+    is_forward_stuck=false;
+    is_both_direction_stuck=false;
 }
 
 void Palinkafozo::show_data(){
     rpm=get_rpm();
     ui->lcdNumber->display(int(rpm));
     ui->lcdNumber_2->display(int(elapsedSeconds));
-    if(enabled){
+    if(is_enabled){
         elapsedSeconds+=0.5;
-        if(elapsedSeconds<=mix_time) {clear_pin(LP_PIN[2]); set_pin(LP_PIN[1]);}
-        if(elapsedSeconds>mix_time) clear_pin(LP_PIN[1]);
+        if(elapsedSeconds<=mix_time) {clear_pin(BACKWARD_PIN); set_pin(FORWARD_PIN);}
+        if(elapsedSeconds>mix_time) clear_pin(FORWARD_PIN);
         if(elapsedSeconds>=(mix_time+wait_time)) elapsedSeconds=0;
-        if(elapsedSeconds<=mix_time && elapsedSeconds>=1 && rpm<MIN_RPM && enabled && is_safety_revolution_check_on){
-            enabled=false; elapsedSeconds=0; left_stuck=true;
+        if(elapsedSeconds<=mix_time && elapsedSeconds>=1 && rpm<MIN_RPM && is_enabled && is_safety_revolution_check_on){
+            is_enabled=false; elapsedSeconds=0; is_forward_stuck=true;
         }
     }
-    if(left_stuck && !both_stuck) try_to_unstuck();
-    if(both_stuck){
+    if(is_forward_stuck && !is_both_direction_stuck) try_to_unstuck();
+    if(is_both_direction_stuck){
         QSound::play("WarningSiren.wav");
     }
 }
 
 void Palinkafozo::try_to_unstuck(){
-    clear_pin(LP_PIN[1]);
-    set_pin(LP_PIN[2]);
+    clear_pin(FORWARD_PIN);
+    set_pin(BACKWARD_PIN);
     if(elapsedSeconds>=REVERSE_SPIN_TIME && rpm<MIN_RPM){
-        clear_pin(LP_PIN[2]);
-        clear_pin(LP_PIN[1]);
-        both_stuck=true;
+        clear_pin(BACKWARD_PIN);
+        is_both_direction_stuck=true;
     }
     if(elapsedSeconds>=REVERSE_SPIN_TIME && rpm>=MIN_RPM){
         elapsedSeconds=0;
-        clear_pin(LP_PIN[2]);
-        enabled=true;
-        left_stuck=false;
+        clear_pin(BACKWARD_PIN);
+        is_enabled=true;
+        is_forward_stuck=false;
     }
     elapsedSeconds+=0.5;
 }
@@ -82,18 +79,18 @@ double Palinkafozo::get_rpm(){
     int rev=0;
     myTimer.start();
 
-    if(pin_is_set(LP_PIN[13])<1){
+    if(pin_is_set(REV_COUNTER_SENSOR)<1){
         prev=0;
     }
-    if(pin_is_set(LP_PIN[13])>=1){
+    if(pin_is_set(REV_COUNTER_SENSOR)>=1){
         prev=1;
     }
     while(myTimer.elapsed()<400){
-       if(pin_is_set(LP_PIN[13])<1 && prev==1){
+       if(pin_is_set(REV_COUNTER_SENSOR)<1 && prev==1){
            rev++;
            prev=0;
        }
-       if(pin_is_set(LP_PIN[13])>=1 && prev==0){
+       if(pin_is_set(REV_COUNTER_SENSOR)>=1 && prev==0){
            rev++;
            prev=1;
        }
@@ -103,25 +100,25 @@ double Palinkafozo::get_rpm(){
 
 void Palinkafozo::on_pushButton_2_clicked()
 {
-    clear_pin(LP_PIN[2]);
-    set_pin(LP_PIN[1]);
-    enabled=false;
+    clear_pin(BACKWARD_PIN);
+    set_pin(FORWARD_PIN);
+    is_enabled=false;
     reset_stuck_variables();
 }
 
 void Palinkafozo::on_pushButton_3_clicked()
 {
-    clear_pin(LP_PIN[1]);
-    clear_pin(LP_PIN[2]);
-    enabled=false;
+    clear_pin(FORWARD_PIN);
+    clear_pin(BACKWARD_PIN);
+    is_enabled=false;
     reset_stuck_variables();
 }
 
 void Palinkafozo::on_pushButton_4_clicked()
 {
-    clear_pin(LP_PIN[1]);
-    set_pin(LP_PIN[2]);
-    enabled=false;
+    clear_pin(FORWARD_PIN);
+    set_pin(BACKWARD_PIN);
+    is_enabled=false;
     reset_stuck_variables();
 }
 
@@ -133,8 +130,9 @@ void Palinkafozo::on_pushButton_clicked()
     wait_time=text2.toDouble();
     is_safety_revolution_check_on = ui->safetyRevolutionCheck->isChecked();
 
-    enabled=true;
+    is_enabled=true;
     reset_stuck_variables();
+    elapsedSeconds=0;
 }
 
 Palinkafozo::~Palinkafozo()

@@ -2,6 +2,7 @@
 #define PALINKAFOZO_H
 
 #include <QMainWindow>
+#include "parapin.h"
 
 namespace Ui {
 class Palinkafozo;
@@ -15,14 +16,17 @@ public:
     const int REFRESH_TIME = 500;
     const double REVERSE_SPIN_TIME = 1.5;
     const double MIN_RPM = 200;
+    const int FORWARD_PIN = LP_PIN[1];
+    const int BACKWARD_PIN = LP_PIN[2];
+    const int REV_COUNTER_SENSOR = LP_PIN[13];
 
     double rpm;
-    bool enabled;
+    bool is_enabled;
     double mix_time;
     double wait_time;
     double elapsedSeconds;
-    bool left_stuck;
-    bool both_stuck;
+    bool is_forward_stuck;
+    bool is_both_direction_stuck;
     bool is_safety_revolution_check_on;
     void init_port();
     void reset_stuck_variables();
