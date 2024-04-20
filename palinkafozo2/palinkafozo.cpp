@@ -53,8 +53,25 @@ void Palinkafozo::show_data(){
     }
     if(is_forward_stuck && !is_both_direction_stuck) try_to_unstuck();
     if(is_both_direction_stuck){
+        display_rpm_error_on_lcd();
         QSound::play("WarningSiren.wav");
     }
+}
+
+void Palinkafozo::display_rpm_error_on_lcd(){
+    QPalette palette=ui->rpmDisplay->palette();
+    palette.setColor(palette.WindowText, QColor(255, 0, 0));
+    palette.setColor(palette.Light, QColor(255, 0, 0));
+    palette.setColor(palette.Dark, QColor(255, 0, 0));
+    ui->rpmDisplay->setPalette(palette);
+}
+
+void Palinkafozo::remove_rpm_error_from_lcd(){
+    QPalette palette=ui->rpmDisplay->palette();
+    palette.setColor(palette.WindowText, QColor(0, 0, 0));
+    palette.setColor(palette.Light, QColor(255, 255, 255));
+    palette.setColor(palette.Dark, QColor(159, 159, 159));
+    ui->rpmDisplay->setPalette(palette);
 }
 
 void Palinkafozo::try_to_unstuck(){
@@ -104,6 +121,7 @@ void Palinkafozo::on_forwardButton_clicked()
     set_pin(FORWARD_PIN);
     is_enabled=false;
     reset_stuck_variables();
+    remove_rpm_error_from_lcd();
 }
 
 void Palinkafozo::on_stopButton_clicked()
@@ -120,19 +138,19 @@ void Palinkafozo::on_backwardsButton_clicked()
     set_pin(BACKWARD_PIN);
     is_enabled=false;
     reset_stuck_variables();
+    remove_rpm_error_from_lcd();
 }
 
 void Palinkafozo::on_startButton_clicked()
 {
-    QString text=ui->mixTimeInput->text();
-    QString text2=ui->waitTimeInput->text();
-    mix_time=ui->mixTimeInput->text().toDouble(); //text.toDouble();
-    wait_time=ui->waitTimeInput->text().toDouble(); //text2.toDouble();
+    mix_time=ui->mixTimeInput->text().toDouble();
+    wait_time=ui->waitTimeInput->text().toDouble();
     is_safety_revolution_check_on = ui->safetyRevolutionCheck->isChecked();
 
     is_enabled=true;
-    reset_stuck_variables();
     elapsedSeconds=0;
+    reset_stuck_variables();
+    remove_rpm_error_from_lcd();
 }
 
 Palinkafozo::~Palinkafozo()

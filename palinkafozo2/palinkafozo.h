@@ -28,6 +28,7 @@ public:
     bool is_forward_stuck;
     bool is_both_direction_stuck;
     bool is_safety_revolution_check_on;
+
     void init_port();
     void reset_stuck_variables();
     double get_rpm();
@@ -40,12 +41,11 @@ public slots:
 
 private slots:
     void on_startButton_clicked();
-
     void on_forwardButton_clicked();
-
     void on_stopButton_clicked();
-
     void on_backwardsButton_clicked();
+    void display_rpm_error_on_lcd();
+    void remove_rpm_error_from_lcd();
 
 public:
     Ui::Palinkafozo *ui;
