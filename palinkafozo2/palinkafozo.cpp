@@ -42,6 +42,7 @@ void Palinkafozo::show_data(){
     rpm=get_rpm();
     ui->rpmDisplay->display(int(rpm));
     ui->timeDisplay->display(int(elapsedSeconds));
+    is_safety_revolution_check_on = ui->safetyRevolutionCheck->isChecked();
     if(is_enabled){
         elapsedSeconds+=0.5;
         if(elapsedSeconds<=mix_time) {clear_pin(BACKWARD_PIN); set_pin(FORWARD_PIN);}
@@ -145,7 +146,6 @@ void Palinkafozo::on_startButton_clicked()
 {
     mix_time=ui->mixTimeInput->text().toDouble();
     wait_time=ui->waitTimeInput->text().toDouble();
-    is_safety_revolution_check_on = ui->safetyRevolutionCheck->isChecked();
 
     is_enabled=true;
     elapsedSeconds=0;
