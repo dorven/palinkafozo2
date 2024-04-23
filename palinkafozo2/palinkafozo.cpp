@@ -1,6 +1,7 @@
 #include <QTime>
 #include <QTimer>
 #include <QSound>
+#include <QIntValidator>
 
 #include "palinkafozo.h"
 #include "ui_palinkafozo.h"
@@ -21,6 +22,7 @@ Palinkafozo::Palinkafozo(QWidget *parent) :
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(show_data()));
     timer->start(REFRESH_TIME);
+    set_input_validators();
     show_data();
 }
 
@@ -36,6 +38,12 @@ void Palinkafozo::init_port(){
 void Palinkafozo::reset_stuck_variables(){
     is_forward_stuck=false;
     is_both_direction_stuck=false;
+}
+
+void Palinkafozo::set_input_validators(){
+    QValidator *input_validator = new QIntValidator(1, 9999, this);
+    ui->mixTimeInput->setValidator(input_validator);
+    ui->waitTimeInput->setValidator(input_validator);
 }
 
 void Palinkafozo::show_data(){
@@ -146,7 +154,6 @@ void Palinkafozo::on_startButton_clicked()
 {
     mix_time=ui->mixTimeInput->text().toDouble();
     wait_time=ui->waitTimeInput->text().toDouble();
-
     is_enabled=true;
     elapsedSeconds=0;
     reset_stuck_variables();

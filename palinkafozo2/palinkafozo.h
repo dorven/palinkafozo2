@@ -17,10 +17,8 @@ public:
     explicit Palinkafozo(QWidget *parent = 0);
     ~Palinkafozo();
 
-public slots:
-    void show_data();
-
 private slots:
+    void show_data();
     void on_startButton_clicked();
     void on_forwardButton_clicked();
     void on_stopButton_clicked();
@@ -45,6 +43,7 @@ private:
     bool is_both_direction_stuck;
     bool is_safety_revolution_check_on;
 
+    void set_input_validators();
     void reset_stuck_variables();
     double get_rpm();
     void try_to_unstuck();
