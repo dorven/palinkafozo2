@@ -9,7 +9,8 @@ The engine's revolution(RPM) and cycle time(Idő) displayed. Cycle time is consi
 If the mixer is starting to get blocked the revolution of the DC engine will dropp. This is detected by the software and it will try to spin the mixer backwards as a human operator would do. This action unblocks the mixer most of the cases.\
 If the unblock attempt is successful then we return to normal mode of operation.\
 If the unblock attempt is unsuccessful the RPM is marked with red and loud warning siren is played.\
-This safety mechanism can be removed via removing the check from "Biztosító". In this case the software do not care about the engine's revolution and never start the unblock process. This is strongly not recommended however there is one scenario when it can be useful. When the revolution counter become faulty and we still want to use machine to finish the already started process.\
+This safety mechanism can be removed via removing the check from "Biztosító". In this case the software do not care about the engine's revolution and never start the unblock process. This is strongly not recommended however there is one scenario when it can be useful. When the revolution counter become faulty and we still want to use machine to finish the already started destillation process.\
 ![Screenshot of the UI](screenshot.png)
+![Whole equipment](whole_equipment.jpg)
 
 
